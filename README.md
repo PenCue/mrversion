@@ -3,7 +3,7 @@
 Creates a new version identifier to use with your builds and releases.
 
 #### background and major changess
-`mrversion` based on [version_mrversion](https://github.com/juliansangillo/version-mrversion) by [Julian Sangillo](https://github.com/juliansangillo)
+`mrversion` based on [version-composer](https://github.com/juliansangillo/version-composer) by [Julian Sangillo](https://github.com/juliansangillo)
 The major changes are 
 * inclusion of github PR support using branch names, 
 * removal of build numbering, 
@@ -151,7 +151,14 @@ jobs:
           echo Release ${{ steps.mrversion.outputs.full-version }}
           git tag ${{ steps.mrversion.outputs.full-version }} $GIT_SHA
           git push origin --tags ${{ steps.mrversion.outputs.full-version }} 
-
+          echo Release ${{ steps.mrversion.outputs.major-version }}
+          git tag -f ${{ steps.mrversion.outputs.major-version }} $GIT_SHA  
+          git push --delete origin ${{ steps.mrversion.outputs.major-version }} || true
+          git push origin --tags ${{ steps.mrversion.outputs.major-version }} 
+          echo Release ${{ steps.mrversion.outputs.major-minor-version }}
+          git tag -f ${{ steps.mrversion.outputs.major-minor-version }} $GIT_SHA 
+          git push --delete origin ${{ steps.mrversion.outputs.major-minor-version }} || true
+          git push origin --tags ${{ steps.mrversion.outputs.major-minor-version }} 
 ```
 ## See Also
 
