@@ -148,17 +148,20 @@ jobs:
       - name: Set Tag
         if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
         run: |
-          echo Release ${{ steps.mrversion.outputs.full-version }}
-          git tag ${{ steps.mrversion.outputs.full-version }} $GIT_SHA
+          echo Full ${{ steps.mrversion.outputs.full-version }}
+          git tag -f ${{ steps.mrversion.outputs.full-version }} $GIT_SHA
+          git push --delete origin ${{ steps.mrversion.outputs.full-version }} || true
           git push origin --tags ${{ steps.mrversion.outputs.full-version }} 
-          echo Release ${{ steps.mrversion.outputs.major-version }}
-          git tag -f ${{ steps.mrversion.outputs.major-version }} $GIT_SHA  
-          git push --delete origin ${{ steps.mrversion.outputs.major-version }} || true
-          git push origin --tags ${{ steps.mrversion.outputs.major-version }} 
-          echo Release ${{ steps.mrversion.outputs.major-minor-version }}
+          echo -n 
+          echo Major Minor ${{ steps.mrversion.outputs.major-minor-version }}
           git tag -f ${{ steps.mrversion.outputs.major-minor-version }} $GIT_SHA 
           git push --delete origin ${{ steps.mrversion.outputs.major-minor-version }} || true
           git push origin --tags ${{ steps.mrversion.outputs.major-minor-version }} 
+          echo -n
+          echo Major ${{ steps.mrversion.outputs.major-version }}
+          git tag -f ${{ steps.mrversion.outputs.major-version }} $GIT_SHA  
+          git push --delete origin ${{ steps.mrversion.outputs.major-version }} || true
+          git push origin --tags ${{ steps.mrversion.outputs.major-version }} 
 ```
 ## See Also
 
