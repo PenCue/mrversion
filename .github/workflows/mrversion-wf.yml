@@ -1,28 +1,24 @@
-name: feature-ci
+name: version-and-tag-ci
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the develop branch
+# this workflow versions and tags the merged commit using commit comments and/or mergebranch nameing. 
 on:
   pull_request:
     types: [closed]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  # This workflow contains a single job called "version-and-tag"
+  version-and-tag:
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
-      - name: Version Composition
+      - name: Mr Version
         if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
-        id: composer
+        id: mrversion
         uses: PenCue/mrversion@v1
         with:
           stable-branch: main
@@ -38,14 +34,14 @@ jobs:
       - name: Set Tag
         if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true 
         run: |
-          echo Release ${{ steps.composer.outputs.full-version }}
-          git tag ${{ steps.composer.outputs.full-version }} $GIT_SHA
-          git push origin --tags ${{ steps.composer.outputs.full-version }} 
-          echo Release ${{ steps.composer.outputs.major-version }}
-          git tag -f ${{ steps.composer.outputs.major-version }} $GIT_SHA  
-          git push --delete origin ${{ steps.composer.outputs.major-version }} || true
-          git push origin --tags ${{ steps.composer.outputs.major-version }} 
-          echo Release ${{ steps.composer.outputs.major-minor-version }}
-          git tag -f ${{ steps.composer.outputs.major-minor-version }} $GIT_SHA 
-          git push --delete origin ${{ steps.composer.outputs.major-minor-version }} || true
-          git push origin --tags ${{ steps.composer.outputs.major-minor-version }} 
+          echo Release ${{ steps.mrversion.outputs.full-version }}
+          git tag ${{ steps.mrversion.outputs.full-version }} $GIT_SHA
+          git push origin --tags ${{ steps.mrversion.outputs.full-version }} 
+          echo Release ${{ steps.mrversion.outputs.major-version }}
+          git tag -f ${{ steps.mrversion.outputs.major-version }} $GIT_SHA  
+          git push --delete origin ${{ steps.mrversion.outputs.major-version }} || true
+          git push origin --tags ${{ steps.mrversion.outputs.major-version }} 
+          echo Release ${{ steps.mrversion.outputs.major-minor-version }}
+          git tag -f ${{ steps.mrversion.outputs.major-minor-version }} $GIT_SHA 
+          git push --delete origin ${{ steps.mrversion.outputs.major-minor-version }} || true
+          git push origin --tags ${{ steps.mrversion.outputs.major-minor-version }} 

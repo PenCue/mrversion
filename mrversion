@@ -5,7 +5,9 @@ set -euo pipefail
 #by mike wessling (based on version-composer)
 #Returns a new version identifier based on the latest existing tag in your current branch.
 PROGNAME="mrversion"
-TERM=${TERM-xterm}
+
+# default TERM to xterm-256color to 
+TERM=${TERM-xterm-color}
 export TERM
 # log_info the given message at the given level. All logs are written to stderr with a timestamp.
 function log_base {
@@ -86,7 +88,7 @@ TYPES[patch]='^(patch|(hot[ -]?)?fix)'
 PRIORITY="major minor patch"
 # numeric value for priority 1 is highest prio
 declare -A PRIOLIST
-i=1 ; for prio in $PRIORITY ; do PRIOLIST[$prio]=$i ; let i++ ; done
+i=1 ; for prio in $PRIORITY ; do PRIOLIST[$prio]=$i ; i=$((i+1)) ; done
 
 initializeGit() {
 	log_info "Initializing git ...";
