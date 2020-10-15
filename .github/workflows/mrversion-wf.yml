@@ -36,7 +36,7 @@ jobs:
         run: |
           echo Full ${{ steps.mrversion.outputs.full-version }}
           git tag -f ${{ steps.mrversion.outputs.full-version }} $GIT_SHA
-          git push --delete origin ${{ steps.mrversion.outputs.major-version }} || true
+          git push --delete origin ${{ steps.mrversion.outputs.full-version }} || true
           git push origin --tags ${{ steps.mrversion.outputs.full-version }} 
           echo -n 
           echo Major Minor ${{ steps.mrversion.outputs.major-minor-version }}
