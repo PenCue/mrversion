@@ -1,0 +1,73 @@
+name: Mr  Version
+author: mike Wessling
+description: Returns bumped version numbers
+branding:
+  icon: tag
+  color: red
+inputs:
+  stable-branch:
+    description: Name of branch in your repo that will be used for stable releases.
+    required: false
+    default: master
+  int-branch:
+    description: Name of branch in your repo that will be used for int releases.
+    required: false
+    default: int
+  dev-branch:
+    description: Name of branch in your repo that will be used for development releases.
+    required: false
+    default: dev
+  stable-tag:
+    description: Custom release tag name for stable releases. By default, stable releases have no stable tag.
+    required: false
+  int-tag:
+    description: Custom release tag name for int releases.
+    required: false
+    default: int
+  dev-tag:
+    description: Custom release tag name for development releases.
+    required: false
+    default: unstable
+  version-prefix: 
+    description: the version prefix to use retrieve the tags, defaults to v
+    required: false
+    default: FALSE
+  initialize: 
+    description: Set to YES to set version to 0.0.0 if no version could be determined. Default NO 
+    required: false
+    default: NO
+outputs:
+  full-version:
+    description: The new version with the release tag appended at the end. Prefixed by version prefix
+    value: ${{ steps.versioning.outputs.full-version }}
+  major-version:
+    description: The new major version with the release tag appended at the end. Prefixed by version prefix
+    value: ${{ steps.versioning.outputs.major-version }}
+  major-minor-version:
+    description: The new major.minor version with the release tag appended at the end. Prefixed by version prefix
+    value: ${{ steps.versioning.outputs.major-minor-version }}
+  version:
+    description: The new version without the release tag appended at the end. Prefixed by version prefix
+    value: ${{ steps.versioning.outputs.version }}
+  tag:
+    description: the release tag
+    value: ${{ steps.versioning.outputs.tag}}
+  dot-tag:
+    description: the dotted release tag 
+    value: ${{ steps.versioning.outputs.dot-tag}}
+  version-prefix:
+    description: version prefix as configured 
+    value: ${{ steps.versioning.outputs.version-prefix}}
+  is-prerelease:
+    description: True if this version is an unstable release (dev or int branch) or false otherwise.
+    value: ${{ steps.versioning.outputs.is_prerelease }}
+runs:
+  using: composite
+  steps:
+    - run: |
+        echo "$GITHUB_ACTION_PATH" >>$GITHUB_PATH
+      shell: bash
+
+    - id: versioning
+      run: mrversion "${{ inputs.stable-branch }}" "${{ inputs.int-branch }}" "${{ inputs.dev-branch }}" "${{ inputs.stable-tag }}" "${{ inputs.int-tag }}" "${{ inputs.dev-tag }}" "${{ inputs.version-prefix }}" "${{ inputs.initialize }}"
+      shell: bash
