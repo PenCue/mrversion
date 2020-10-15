@@ -25,14 +25,14 @@ jobs:
         id: composer
         uses: PenCue/mrversion@v1
         with:
-          stable-branch: release
+          stable-branch: main
           int-branch: int
-          dev-branch: develop
+          dev-branch: dev
           stable-tag: null
           int-tag: rc
           dev-tag: unstable
-          version-prefix: V
-          initialize: NO 
+          version-prefix: v
+          initialize: YES 
 
       # Runs a set of commands using the runners shell
       - name: Set Tag
