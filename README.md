@@ -133,7 +133,7 @@ jobs:
       - name: Mr Version
         if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
         id: mrversion
-        uses: PenCue/mrversion@v2
+        uses: PenCue/mrversion@bootstrap
         # all the defaults
         with:
           stable-branch: master
